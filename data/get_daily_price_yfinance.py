@@ -24,18 +24,18 @@ def format_volume(value):
     return str(int(value))
 
 def get_daily_price(SYMBOL: str):
-    end_date = datetime.now()
+    end_date = datetime.now() + timedelta(days=1)
     start_date = end_date - timedelta(days=150)
     
     ticker = yf.Ticker(SYMBOL)
-    hist = ticker.history(start=start_date.strftime("%Y-%m-%d"), end=end_date.strftime("%Y-%m-%d"))
+    hist = ticker.history(start=start_date.strftime("%Y-%m-%d"), end=end_date.strftime("%Y-%m-%d"), auto_adjust=False)
     
     if hist.empty:
         raise Exception(f"No data available for {SYMBOL}")
     
     data = {
         "Meta Data": {
-            "1. Information": "Daily Prices (Open, High, Low, Close, Volume)",
+            "1. Information": "Daily Prices (open, high, low, close) and Volumes",
             "2. Symbol": SYMBOL,
             "3. Last Refreshed": hist.index[-1].strftime("%Y-%m-%d"),
             "4. Output Size": "Compact",
