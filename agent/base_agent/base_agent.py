@@ -395,6 +395,7 @@ class BaseAgent:
                     max_retries=3,
                     timeout=30,
                 )
+                print(f"🤖 Using basemodel: {self.basemodel}")
         except Exception as e:
             raise RuntimeError(f"❌ Failed to initialize AI model: {e}")
 
@@ -587,13 +588,13 @@ class BaseAgent:
                     if max_date is None:
                         max_date = current_date
                     else:
-                        current_date_obj = datetime.strptime(current_date, "%Y-%m-%d")
-                        max_date_obj = datetime.strptime(max_date, "%Y-%m-%d")
+                        current_date_obj = datetime.strptime(current_date, "%Y-%m-%d %H:%M:%S") if " " in current_date else datetime.strptime(current_date, "%Y-%m-%d")
+                        max_date_obj = datetime.strptime(max_date, "%Y-%m-%d %H:%M:%S") if " " in max_date else datetime.strptime(max_date, "%Y-%m-%d")
                         if current_date_obj > max_date_obj:
                             max_date = current_date
 
         # Check if new dates need to be processed
-        max_date_obj = datetime.strptime(max_date, "%Y-%m-%d")
+        max_date_obj = datetime.strptime(max_date, "%Y-%m-%d %H:%M:%S") if " " in max_date else datetime.strptime(max_date, "%Y-%m-%d")
         end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
 
         if end_date_obj <= max_date_obj:
