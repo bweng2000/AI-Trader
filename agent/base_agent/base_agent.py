@@ -392,7 +392,7 @@ class BaseAgent:
             elif "gemini" in self.basemodel.lower():
                 self.model = ChatGoogleGenerativeAI(
                     model=self.basemodel,
-                    google_api_key=self.gemini_api_key,
+                    api_key=self.gemini_api_key,
                     max_retries=3,
                     timeout=30,
                 )
@@ -505,7 +505,7 @@ class BaseAgent:
 
                 # Extract tool messages
                 tool_msgs = extract_tool_messages(response)
-                tool_response = "\n".join([msg.content for msg in tool_msgs])
+                tool_response = "\n".join([msg.content[0].get("text") for msg in tool_msgs])
 
                 # Prepare new messages
                 new_messages = [
