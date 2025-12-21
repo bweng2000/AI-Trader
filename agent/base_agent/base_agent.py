@@ -17,6 +17,7 @@ from langchain.agents import create_agent
 from langchain_core.globals import set_verbose, set_debug
 from langchain_core.messages import AIMessage
 from langchain_core.utils.function_calling import convert_to_openai_tool
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_openai import ChatOpenAI
 
@@ -295,6 +296,7 @@ class BaseAgent:
             self.openai_api_key = os.getenv("OPENAI_API_KEY")
         else:
             self.openai_api_key = openai_api_key
+        self.gemini_api_key = os.getenv("GEMINI_API_KEY")
 
         # Initialize components
         self.client: Optional[MultiServerMCPClient] = None
@@ -384,6 +386,13 @@ class BaseAgent:
                     model=self.basemodel,
                     base_url=self.openai_base_url,
                     api_key=self.openai_api_key,
+                    max_retries=3,
+                    timeout=30,
+                )
+            elif "gemini" in self.basemodel.lower():
+                self.model = ChatGoogleGenerativeAI(
+                    model=self.basemodel,
+                    google_api_key=self.gemini_api_key,
                     max_retries=3,
                     timeout=30,
                 )
