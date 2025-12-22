@@ -2,7 +2,7 @@
   "agent_type": "BaseAgent",
   "date_range": {
     "init_date": "2025-11-08",
-    "end_date": "2025-12-15"
+    "end_date": "2025-12-20"
   },
   "models": [
     {
@@ -32,9 +32,9 @@
       "enabled": true
     },
     {
-      "name": "gpt-4.1",
-      "basemodel": "gpt-4.1",
-      "signature": "gpt-4.1",
+      "name": "gpt-5",
+      "basemodel": "gpt-5",
+      "signature": "gpt-5",
       "enabled": false
     }
   ],
