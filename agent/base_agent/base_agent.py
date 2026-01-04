@@ -19,7 +19,9 @@ from langchain_core.messages import AIMessage
 from langchain_core.utils.function_calling import convert_to_openai_tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
+from langchain_qwq import ChatQwen
 
 # Best-effort import for a console/stdout callback handler across LangChain versions
 try:  # langchain <=0.1 style
@@ -297,6 +299,12 @@ class BaseAgent:
         else:
             self.openai_api_key = openai_api_key
         self.gemini_api_key = os.getenv("GEMINI_API_KEY")
+        self.deepseek_base_url = os.getenv("DEEPSEEK_BASE_URL")
+        self.deepseek_api_key = os.getenv("DEEPSEEK_API_KEY")
+        self.dashscope_base_url = os.getenv("DASHSCOPE_BASE_URL")
+        self.dashscope_api_key = os.getenv("DASHSCOPE_API_KEY")
+        self.ollama_base_url = os.getenv("OLLAMA_BASE_URL")
+        #self.ollama_api_key = os.getenv("OLLAMA_API_KEY")
 
         # Initialize components
         self.client: Optional[MultiServerMCPClient] = None
@@ -381,11 +389,11 @@ class BaseAgent:
         try:
             # Create AI model - use custom DeepSeekChatOpenAI for DeepSeek models
             # to handle tool_calls.args format differences (JSON string vs dict)
-            if "deepseek" in self.basemodel.lower():
+            if "deepseek-chat" in self.basemodel.lower():
                 self.model = DeepSeekChatOpenAI(
                     model=self.basemodel,
-                    base_url=self.openai_base_url,
-                    api_key=self.openai_api_key,
+                    base_url=self.deepseek_base_url,
+                    api_key=self.deepseek_api_key,
                     max_retries=3,
                     timeout=30,
                 )
@@ -396,6 +404,23 @@ class BaseAgent:
                     max_retries=3,
                     timeout=30,
                 )
+            elif "qwen" in self.basemodel.lower():
+                self.model = ChatQwen(
+                    model=self.basemodel,
+                    base_url=self.dashscope_base_url,
+                    api_key=self.dashscope_api_key,
+                    max_retries=3,
+                    timeout=30,
+                )
+            elif "llama" in self.basemodel.lower():
+                self.model = ChatOllama(
+                    model=self.basemodel,
+                    base_url=self.ollama_base_url,
+                    max_retries=3,
+                    timeout=30,
+                    temperature=0,
+                )
+                print(f"🤖 Using Ollama model: {self.basemodel}")
             else:
                 self.model = ChatOpenAI(
                     model=self.basemodel,
@@ -505,7 +530,7 @@ class BaseAgent:
 
                 # Extract tool messages
                 tool_msgs = extract_tool_messages(response)
-                tool_response = "\n".join([msg.content[0].get("text") for msg in tool_msgs])
+                tool_response = "\n".join([msg.content for msg in tool_msgs])
 
                 # Prepare new messages
                 new_messages = [

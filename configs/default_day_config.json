@@ -7,7 +7,7 @@
   "models": [
     {
       "name": "claude-3.7-sonnet",
-      "basemodel": "anthropic/claude-3.7-sonnet", 
+      "basemodel": "claude-3.7-sonnet", 
       "signature": "claude-3.7-sonnet",
       "enabled": false,
       "openai_base_url": "Optional: YOUR_OPENAI_BASE_URL,you can write them in .env file",
@@ -21,7 +21,7 @@
     },
     {
       "name": "qwen3-max",
-      "basemodel": "qwen/qwen3-max",
+      "basemodel": "qwen3-max",
       "signature": "qwen3-max",
       "enabled": false
     },
@@ -29,13 +29,19 @@
       "name": "gemini-2.5-flash",
       "basemodel": "gemini-2.5-flash",
       "signature": "gemini-2.5-flash",
-      "enabled": true
+      "enabled": false
     },
     {
       "name": "gpt-5",
       "basemodel": "gpt-5",
       "signature": "gpt-5",
       "enabled": false
+    },
+    {
+      "name": "llama3.1:8b",
+      "basemodel": "llama3.1:8b",
+      "signature": "llama3.1:8b",
+      "enabled": true
     }
   ],
   "agent_config": {
